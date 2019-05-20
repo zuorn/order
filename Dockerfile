@@ -1,4 +1,5 @@
-FROM tomcat
+
+FROM bolingcavalry/centos67-pinpoint163-agent:0.0.1
 
 ADD target/order.war /
 

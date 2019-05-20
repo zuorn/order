@@ -1,39 +1,35 @@
 version: '2'
 services:
-  pinpoint-server:
-    image: zuorn/pinpoint-server
-    container_name: pinpoint-server
-    ports:
-      - "19001:22"
-      - "28080:28080"
-    restart: always
-
-    networks:
-      - defaults
 
   order:
-    image: bolingcavalry/centos67-pinpoint163-agent:0.0.1
-    container_name: order
-    command: sh bin/startup.sh
+    build: .
+    container_name: "order"
     ports:
       - "8080:8080"
     restart: always
-    links:
-      - db
-    depends_on:
-      - db
     networks:
       - default
+    depends_on:
+      - db
+    links:
+      - pinpoint:pinpointhost
+
 
   db:
     image: mysql:5.6
-    restart: always
-    container_name: "mysql_5_7"
+    container_name: "orderdb"
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
+       MYSQL_ROOT_PASSWORD: 123456
     ports:
-     - 3306:3306
-    links:
-      - order
+     - "3306:3306"
     networks:
       - default
+
+  pinpoint:
+    image: zuorn/pinpoint-server
+    container_name: "pinpoint-server"
+    ports:
+      - "28080:28080"
+    networks:
+      - default
+
